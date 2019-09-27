@@ -107,7 +107,7 @@ const routes = {
     <Link route={routes.person} params={{id:123}}>Person with path param id = 123</Link>
     <Link route={routes.person} params={{id:456, showAll:true}}>Person with path param id = 456 and query param showAll = true</Link>
 </nav>
-<Grouter {routes} />
+<GRouter {routes} />
 
 <!-- Styling the anchor tag of a Link component -->
 <style>
@@ -172,7 +172,7 @@ This is a function that can be used to programatically navigate to a route, pass
 
 ```html
 <script>
-import { GRouter, Link } from 'svelte-grouter'
+import { GRouter, Link, navigateTo } from 'svelte-grouter'
 import Home from './Home.svelte'
 import About from './About.svelte'
 import Person from './Person.svelte'
@@ -199,53 +199,7 @@ const routes = {
     <button on:click={() => navigateTo(routes.person, { id: 123 })} >Person with path param id = 123</button>
     <button on:click={() => navigateTo(routes.person, { id: 456, showAll: true })} >Person with path param id = 456 and query param showAll = true</button>
 </nav>
-<Grouter {routes} />
-```
-
-
-#### `navigateTo`
-
-This is a function that can be used to programatically navigate to a route, passing any required params.
-
-###### Properties
-
-|  Property  | Required | Default Value | Description |
-| --- | --- | --- | --- |
-| `route` | `yes` |  | An object representing the route to navigate to.  See the section on `Routes` for a description of how to define a route |
-| `params` | `no` | `{}` | An object representing all parameters, both path and query, that may need to be used to populate the route.  This is a simple key value pair.  If a path param is defined in the path of the route, and the corresponding key is defined on this params object, it will be populated.  All other keys on this object (those that don't match a path param from the routes path) will be placed on the end of the url as query parameters.  For example: If the route path is `/person/:id` and the params object is `{id: '123', showAll: false, showAccounts: true}`, the resulting link would be to `/person/123?showAll=false&showAccounts=true` |
-
-###### Examples
-
-```html
-<script>
-import { GRouter, navigateTo } from 'svelte-grouter'
-import Home from './Home.svelte'
-import About from './About.svelte'
-import Person from './Person.svelte'
-
-const routes = {
-    'home': {
-        path: '/home',
-        component: Home
-    },
-    'about': {
-        path: '/about',
-        component: About
-    },
-    'person': {
-        path: '/person/:id',
-        component: Person
-    },
-}
-</script>
-
-<nav>
-    <button on:click={() => navigateTo(routes.home)} >Home</button>
-    <button on:click={() => navigateTo(routes.about)} >About</button>
-    <button on:click={() => navigateTo(routes.person, { id: 123 })} >Person with path param id = 123</button>
-    <button on:click={() => navigateTo(routes.person, { id: 456, showAll: true })} >Person with path param id = 456 and query param showAll = true</button>
-</nav>
-<Grouter {routes} />
+<GRouter {routes} />
 ```
 
 
@@ -285,11 +239,12 @@ $: console.log(JSON.stringify($currentRoute, null , 2))
 </script>
 
 <nav>
-    <button on:click={() => navigateTo(routes.home)} >Home</button>
-    <button on:click={() => navigateTo(routes.about)} >About</button>
-    <button on:click={() => navigateTo(routes.person, { id: 456, showAll: true })} >Person with path param id = 456 and query param showAll = true</button>
+    <Link route={routes.home}>Home</Link>
+    <Link route={routes.about}>About</Link>
+    <Link route={routes.person} params={{id:123}}>Person with path param id = 123</Link>
+    <Link route={routes.person} params={{id:456, showAll:true}}>Person with path param id = 456 and query param showAll = true</Link>
 </nav>
-<Grouter {routes} />
+<GRouter {routes} />
 ```
 
 This example shows how to gather information from the url about my component
@@ -326,6 +281,23 @@ The keys of this object are names of routes.  The values are objects, each defin
 | `redirectTo` | `if component is not present` |  | A string - the name of the route to redirect to when the path pattern matches.  Note, this is not the _path_ to redirect to, it' the _name_ of the route. |
 
 ###### Examples
+
+```html
+<script>
+import { GRouter, Link, currentRoute } from 'svelte-grouter'
+import Home from './Home.svelte'
+import Person from './Person.svelte'
+import {routes} from './routes.js'
+
+</script>
+
+<nav>
+    <Link route={routes.home}>Home</Link>
+    <Link route={routes.person} params={{id:123}}>Person with path param id = 123</Link>
+    <Link route={routes.person} params={{id:456, showAll:true}}>Person with path param id = 456 and query param showAll = true</Link>
+</nav>
+<GRouter {routes} />
+```
 
 ```js
 // routes.js

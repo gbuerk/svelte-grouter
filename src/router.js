@@ -67,7 +67,9 @@ function matchRouteByUrl(routes, url) {
     const matchedRoute = Object.values(routes).filter(route => {
         const splitPath = route.path.split(/\//)
         const splitUrl = urlWithoutQueryParams.split(/\//)
-        if (splitPath.length === splitUrl.length || isWildcardMatch(splitPath)) {
+        if (isWildcardMatch(splitPath)) {
+            return true
+        } else if (splitPath.length === splitUrl.length) {
             let match = true
             for (let index = 0; index < splitPath.length; index++) {
                 const pathSegment = splitPath[index];
@@ -122,6 +124,5 @@ function isWildcardMatch(splitPath) {
 
 function handleRedirect(routes, routeWithRedirect) {
     const routeToRedirectTo = Object.values(routes).filter(r => routes[routeWithRedirect.redirectTo])[0];
-    writableCurrentRoute.set(routeToRedirectTo);
-    window.history.pushState({ path: routeToRedirectTo.path }, "", window.location.origin + routeToRedirectTo.path);
+    navigateTo(routeToRedirectTo)
 }
