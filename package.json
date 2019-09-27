@@ -1,0 +1,21 @@
+{
+  "name": "svelte-grouter",
+  "version": "1.0.0",
+  "description": "A sensible and minimal router for use with Svelte",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "svelte",
+    "route",
+    "router",
+    "routing",
+    "client"
+  ],
+  "author": "Gavin Buerk",
+  "license": "MIT",
+  "peerDependencies": {
+    "svelte": "3.x"
+  }
+}
