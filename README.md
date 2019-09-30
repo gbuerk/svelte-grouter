@@ -279,6 +279,7 @@ The keys of this object are names of routes.  The values are objects, each defin
 | `path` | `yes` |  | A string - The path of the route.  This can be a static string like `/person`, a dynamic string with path parameters like `/person/:id`, or a `*` as a catch-all |
 | `component` | `if redirect is not present` |  | An object - The svelte component to render when the path pattern patches |
 | `redirectTo` | `if component is not present` |  | A string - the name of the route to redirect to when the path pattern matches.  Note, this is not the _path_ to redirect to, it' the _name_ of the route. |
+| `params` | `READ ONLY` |  | An object - when the user is subscribed to `currentRoute`, the route object will contain this field.  It contains key / value pairs of all parameters, path and query, in the context of the current route.  See the example above in the `currentRoute` section.  If the user explicitly defines `params` in their routes, those params will be ignored.  This property is intended to be read only. |
 
 ###### Examples
 

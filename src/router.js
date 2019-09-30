@@ -60,9 +60,7 @@ function getHydratedPath(route) {
 
 function matchRouteByUrl(routes, url) {
     let queryParams = getQueryParams(url)
-    console.log(`Query Params: ${JSON.stringify(queryParams, null, 2)}`)
     const urlWithoutQueryParams = url.includes('?') ? url.split('?')[0] : url
-    console.log(`urlWithoutQueryParams: ${urlWithoutQueryParams}`)
 
     const matchedRoute = Object.values(routes).filter(route => {
         const splitPath = route.path.split(/\//)

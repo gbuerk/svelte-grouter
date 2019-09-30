@@ -1,6 +1,6 @@
 {
   "name": "svelte-grouter",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "A sensible and minimal router for use with Svelte",
   "main": "src/index.js",
   "repository": {
