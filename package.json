@@ -1,11 +1,11 @@
 {
   "name": "svelte-grouter",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "A sensible and minimal router for use with Svelte",
   "main": "src/index.js",
   "repository": {
-    "type" : "git",
-    "url" : "https://github.com/gbuerk/svelte-grouter.git"
+    "type": "git",
+    "url": "https://github.com/gbuerk/svelte-grouter.git"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

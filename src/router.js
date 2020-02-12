@@ -100,7 +100,7 @@ function getPathParams(matchedRoute, url) {
         for (let index = 0; index < splitPath.length; index++) {
         const pathSegment = splitPath[index];
             if (pathSegment.slice(0, 1) === ':') {
-            pathParams[pathSegment.slice(1)] = splitUrl[index];
+            pathParams[pathSegment.slice(1)] = decodeURIComponent(splitUrl[index]);
         }
     }
     return pathParams;

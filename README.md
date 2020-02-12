@@ -10,7 +10,7 @@ svelte-grouter is a simple client-side routing engine designed for use in [svelt
 
 ## Install
 ```
-npm install --save svelte-grouter
+npm install --save-dev svelte-grouter
 ```
 
 ## Usage
