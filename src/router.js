@@ -3,8 +3,16 @@ const writableCurrentRoute = writable({})
 export const currentRoute = {
     subscribe: writableCurrentRoute.subscribe
 }
+let routes
+
+export function storeRoutes(r) {
+    routes = r
+}
 
 export function navigateTo(route, params) {
+    if (typeof(route) === "string") {
+        route = routes[route]
+    }
     // change current router path
     route.params = params || {}
     writableCurrentRoute.set(route);
@@ -25,7 +33,7 @@ export function mapUrlToRoute(url, routes) {
       window.history.replaceState({ path: url },"",url)
     }
     if (matchedRoute && matchedRoute.redirectTo) {
-        handleRedirect(routes, matchedRoute)
+        navigateTo(matchedRoute.redirectTo)
     }
 }
 
@@ -118,9 +126,4 @@ function getQueryParams(url) {
 
 function isWildcardMatch(splitPath) {
     return (splitPath.length === 1 && splitPath[0] === '*');
-}
-
-function handleRedirect(routes, routeWithRedirect) {
-    const routeToRedirectTo = Object.values(routes).filter(r => routes[routeWithRedirect.redirectTo])[0];
-    navigateTo(routeToRedirectTo)
 }

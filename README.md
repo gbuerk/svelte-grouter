@@ -165,7 +165,7 @@ This is a function that can be used to programatically navigate to a route, pass
 
 |  Property  | Required | Default Value | Description |
 | --- | --- | --- | --- |
-| `route` | `yes` |  | An object representing the route to navigate to.  See the section on `Routes` for a description of how to define a route |
+| `route` | `yes` |  | An object representing the route to navigate to.  This can be a Route object as defined in the section on `Routes`, or it could be a string representing the route name, as defined in the `name` property on the route.  Using a string is a convenient way to avoid cyclic dependencies should one of your routes need to link to another.  See the section on `Routes` for a description of how to define a route |
 | `params` | `no` | `{}` | An object representing all parameters, both path and query, that may need to be used to populate the route.  This is a simple key value pair.  If a path param is defined in the path of the route, and the corresponding key is defined on this params object, it will be populated.  All other keys on this object (those that don't match a path param from the routes path) will be placed on the end of the url as query parameters.  For example: If the route path is `/person/:id` and the params object is `{id: '123', showAll: false, showAccounts: true}`, the resulting link would be to `/person/123?showAll=false&showAccounts=true` |
 
 ###### Examples
@@ -234,7 +234,7 @@ const routes = {
 }
 
 // THIS IS THE INTERESTING PIECE - we're subscribed to the current route and printing it out whenever it changes
-$: console.log(JSON.stringify($currentRoute, null , 2))
+$: console.log($currentRoute)
 
 </script>
 
@@ -277,8 +277,10 @@ The keys of this object are names of routes.  The values are objects, each defin
 |  Property  | Required | Default Value | Description |
 | --- | --- | --- | --- |
 | `path` | `yes` |  | A string - The path of the route.  This can be a static string like `/person`, a dynamic string with path parameters like `/person/:id`, or a `*` as a catch-all |
-| `component` | `if redirect is not present` |  | An object - The svelte component to render when the path pattern patches |
-| `redirectTo` | `if component is not present` |  | A string - the name of the route to redirect to when the path pattern matches.  Note, this is not the _path_ to redirect to, it' the _name_ of the route. |
+| `name` | `no` | undefined |  A string - The name of the route.  This is required if you want to reference routes by name in `Link` or `navigateTo`, rather than passing in the whole route.  This is also required if `redirect` routes are present in this application |
+| `component` | `One of component, layout, or redirectTo is required for each route` |  | An object - The svelte component to render when the path pattern patches |
+| `layout` | `One of component, layout, or redirectTo is required for each route` |  | An object that defines the layout Component and which slots to use to build the page.  See the section on `Layouts` for further description and examples |
+| `redirectTo` | `One of component, layout, or redirectTo is required for each route` |  | A string - the name of the route to redirect to when the path pattern matches.  Note, this is not the _path_ to redirect to, it' the _name_ of the route. |
 | `params` | `READ ONLY` |  | An object - when the user is subscribed to `currentRoute`, the route object will contain this field.  It contains key / value pairs of all parameters, path and query, in the context of the current route.  See the example above in the `currentRoute` section.  If the user explicitly defines `params` in their routes, those params will be ignored.  This property is intended to be read only. |
 
 ###### Examples
@@ -307,18 +309,69 @@ import Person from './Person.svelte';
 export const routes = {
     // Simple static route
     'home': {
+        name: 'home',
         path: '/home',
         component: Home
     },
     // Route with dynamic path parameter
     'person': {
+        name: 'person',
         path: '/person/:id',
         component: Person
     },
     // Route that redirects to another route
     'default': {
+        name: 'default',
         path: '*',
         redirectTo: 'home'
     }
 }
 ```
+
+#### `Layouts`
+
+This is an object that can by used to build dynamic layouts on your page. This object can be used as the value of the `layout` property on a route.
+
+###### Properties
+
+|  Property  | Required | Default Value | Description |
+| --- | --- | --- | --- |
+| `component` | `yes` |  | A svelte component that defines the layout component to use.  This component should `export let slots`, a variable that will be passed in to the layout and can be used to put appropriately named slots on the page in various places.  The syntax for using the `slot` variable is `<svelte:component this={slots.header} />`.  In this example, the `header` slot has been defined on the layout object and will be made avaiable to the layout component. |
+| The rest of the property names define slot names to be used in the layout | no |   | Each slot named value corresponds to a svelte component that will be made available in the layout to fill that slot.  See examples below. |
+
+###### Examples
+
+```html
+<!-- Layout.svelte - the Layout Component -->
+<script>
+export let slots
+</script>
+
+<div class="layout">
+    <header>
+        <svelte:component this={slots.header} />
+    </header>
+    <svelte:component this={slots.content} />
+</div>
+```
+The above example shows two sloted components called `header` and `content` respectively.  The would be declaired in the route as follows:
+
+```js
+// routes.js
+import Home from './Home.svelte';
+import Header from './Header.svelte';
+import Layout from './Layout.svelte';
+
+export const routes = {
+    // Route showing layout
+    'home': {
+        path: '/home',
+        layout: {
+            component: Layout,
+            content: Home,
+            header: Header
+        }
+    }
+}
+```
+
