@@ -1,7 +1,13 @@
-import { writable } from 'svelte/store'
+import { writable, get } from 'svelte/store'
 const writableCurrentRoute = writable({})
 export const currentRoute = {
-    subscribe: writableCurrentRoute.subscribe
+    subscribe: writableCurrentRoute.subscribe,
+    addCanDeactivate(canDeactivateFunc) {
+        writableCurrentRoute.set({
+            ...get(writableCurrentRoute),
+            canDeactivate: canDeactivateFunc
+        })
+    } 
 }
 let routes
 
@@ -13,6 +19,17 @@ export function navigateTo(route, params) {
     if (typeof(route) === "string") {
         route = routes[route]
     }
+
+    let prevRoute = get(writableCurrentRoute)
+
+    // execute the canDeactivate
+    if (prevRoute.canDeactivate) {
+        if(!prevRoute.canDeactivate()){
+            console.debug("Canceling current navigation because user defined canDeactivate returned falsey.")
+            return;
+        }
+    }
+
     // change current router path
     route.params = params || {}
     writableCurrentRoute.set(route);
