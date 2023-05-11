@@ -24,7 +24,7 @@ export function navigateTo(route, params) {
 
     // execute the canDeactivate
     if (prevRoute.canDeactivate) {
-        if(!prevRoute.canDeactivate()){
+        if(!prevRoute.canDeactivate(route)){
             console.debug("Canceling current navigation because user defined canDeactivate returned falsey.")
             return;
         }
