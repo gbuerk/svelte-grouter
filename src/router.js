@@ -15,7 +15,14 @@ export function storeRoutes(r) {
     routes = r
 }
 
-export function navigateTo(route, params) {
+/**
+ * 
+ * @param { string } route The route that should be navigated to next 
+ * @param { { [key:string]: string | number } | undefined } params an object that contains key:value pairs of parameters that will be mapped as query string parameters 
+ * @param { boolean | undefined } bypassCanDeactivate a true/false value that will bypass the CanDeactive function, if one exists on the exit route 
+ * @returns 
+ */
+export function navigateTo(route, params, bypassCanDeactivate) {
     if (typeof(route) === "string") {
         route = routes[route]
     }
@@ -23,7 +30,7 @@ export function navigateTo(route, params) {
     let prevRoute = get(writableCurrentRoute)
 
     // execute the canDeactivate
-    if (prevRoute.canDeactivate) {
+    if (!bypassCanDeactivate && prevRoute.canDeactivate) {
         if(!prevRoute.canDeactivate(route)){
             console.debug("Canceling current navigation because user defined canDeactivate returned falsey.")
             return;
